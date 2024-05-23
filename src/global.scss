@@ -1,0 +1,106 @@
+@import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+body {
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+main {
+    height: 100%;
+}
+
+html *::-webkit-scrollbar {
+    border-radius: 0;
+    width: 8px;
+    z-index: 999999999999999;
+}
+
+html *::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 999999999999999;
+}
+
+html *::-webkit-scrollbar-track {
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.flex-w100 {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.shadownCs {
+    box-shadow: 0px 15px 10px -15px #111;
+    z-index: 100;
+}
+
+.customHeaderAccount {
+
+    h3 {
+        margin: 0;
+    }
+
+    .timeOnline {
+        font-size: 12px;
+        color: #666;
+    }
+}
+
+@media (min-width: 900px) {
+    .hiddenPc {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .chat {
+        margin: 0;
+        padding: 0;
+
+        .hiddenMb {
+            display: none;
+        }
+
+        .hiddenPc {
+            padding: 0;
+        }
+
+        .chatbox {
+            padding: 0;
+
+            div.d-flex.flex-row.gap-4.pe-5.text-lg.h5 {
+                padding: 0 !important;
+            }
+
+            div._render-chat_nb039_37.py-2.px-5 {
+                padding-left: 10px !important;
+                padding-right: 10px !important;
+            }
+
+            input.ant-input.css-dev-only-do-not-override-1okl62o.ant-input-outlined {
+                font-size: 15px !important;
+            }
+
+            span.anticon.anticon-send,
+            span.anticon.anticon-smile {
+                font-size: 20px !important;
+            }
+        }
+    }
+
+}
+
+.limit-height {
+    height: 100vh;
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .noPaddingR ight {
+        padding-right: 0 !important;
+    }
+}

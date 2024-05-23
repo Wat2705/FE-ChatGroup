@@ -1,0 +1,79 @@
+.wp {
+    flex: 1;
+    background-image: url('@/assets/img/g.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+
+    &::after {
+        content: "";
+        width: 100%;
+        height: 100%;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        background-image: url('@/assets/img/bgrepet.png');
+        background-position: top right;
+        background-size: 510px auto;
+        background-repeat: repeat;
+        mix-blend-mode: overlay;
+    }
+
+    .children {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        z-index: 1;
+    }
+}
+
+.renderChat {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.inputChat {
+    height: 70px;
+    line-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    background: #fff;
+    width: 92%;
+    margin: 0 auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2);
+
+    #msg-input {
+        border: none;
+        outline: none;
+        flex: 1;
+        padding-left: 20px;
+        font-size: 20px;
+    }
+
+    Input:focus {
+        box-shadow: none;
+    }
+}
+
+.renderEmoji {
+    position: absolute;
+    width: 50%;
+    height: 300px;
+    background-color: #ebf5e3;
+    top: 10px;
+    display: none;
+}

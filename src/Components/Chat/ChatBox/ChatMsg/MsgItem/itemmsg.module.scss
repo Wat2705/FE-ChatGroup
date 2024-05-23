@@ -1,0 +1,43 @@
+.msg {
+    display: flex;
+
+    .msgChildren {
+        background-color: #fff;
+    }
+
+    &.user {
+        justify-content: flex-end;
+
+        .msgChildren {
+            background-color: rgb(238, 255, 222);
+        }
+    }
+}
+
+.msgChildren {
+    display: flex;
+    max-width: 45%;
+    padding: 10px 20px;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.2);
+
+    div {
+
+        &:last-child {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+
+            span {
+                display: flex;
+
+                img {
+                    object-fit: contain;
+                    flex-shrink: 0;
+                }
+            }
+        }
+    }
+}

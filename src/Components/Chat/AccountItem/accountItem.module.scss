@@ -1,0 +1,82 @@
+.itemChat {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+
+    .badgeCustom {
+        position: absolute;
+        min-width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: 10px;
+        right: 6px;
+        background: #40A7E3;
+        border-radius: 50%;
+        color: #fff;
+        font-size: 10px;
+        font-weight: 500;
+    }
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.03);
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .badgeCustom {
+        position: static;
+        width: 20px;
+    }
+
+    .infoAndTime {
+        padding-left: 10px;
+        display: flex;
+        justify-content: space-between;
+        flex: 1;
+        align-items: center;
+
+        p {
+            padding: 0;
+            margin: 0;
+        }
+
+        div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            &:first-child {
+
+                /* Nếu chữ dài quá một dòng sẽ xuất hiện dấy ... */
+                h3,
+                p {
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 1;
+                    overflow: hidden;
+                }
+            }
+
+            &:last-child {
+                text-align: center;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+    }
+
+    img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        object-position: center;
+        border: 0.2px solid #ccc;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+}
