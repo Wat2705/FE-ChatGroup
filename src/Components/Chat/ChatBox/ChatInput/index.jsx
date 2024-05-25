@@ -1,10 +1,29 @@
+import { socket } from "@/config/socket";
+import { sendingMessage } from "@/redux/chat";
 import { SendOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
+import { useDispatch } from "react-redux";
 import styles from "../chatbox.module.scss";
 
 export default function ChatInput() {
+    const [form] = Form.useForm();
+    const dispatch = useDispatch()
+
+    const handleSubmit = (data) => {
+        if (data.msg != '' && data.msg != undefined) {
+            dispatch(sendingMessage({
+                msg: data.msg,
+                user: 'Tôi'
+            }))
+            socket.emit('sendMessagePublic', {
+                msg: data.msg
+            })
+            form.setFieldValue('msg', '')
+        }
+    }
+
     return (
-        <Form className={styles.inputChat}>
+        <Form className={styles.inputChat} form={form} onFinish={handleSubmit}>
             <Form.Item style={{ marginBottom: "0", width: '90%' }} name='msg'>
                 <Input style={{
                     border: "none",

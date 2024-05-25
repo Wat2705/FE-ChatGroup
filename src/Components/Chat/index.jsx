@@ -1,5 +1,7 @@
 import { socket } from "@/config/socket";
+import { receivedMessage } from "@/redux/chat";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Col, Row } from "reactstrap";
 import ChatBox from "./ChatBox";
 import Header from "./Header";
@@ -7,16 +9,23 @@ import SideBar from "./SideBar";
 import styles from './chat.module.scss';
 
 function Chat() {
+    const dispatch = useDispatch()
 
     useEffect(() => {
         function onConnect() {
             console.log('connected')
         }
 
+        function onReceive(data) {
+            dispatch(receivedMessage(data))
+        }
+
         socket.on('connect', onConnect);
+        socket.on('receiveMessagePublic', onReceive)
 
         return () => {
             socket.off('connect', onConnect);
+            socket.off('receiveMessagePublic', onReceive)
         }
     }, [])
 
