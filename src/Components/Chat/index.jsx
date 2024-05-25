@@ -1,3 +1,5 @@
+import { socket } from "@/config/socket";
+import { useEffect } from "react";
 import { Col, Row } from "reactstrap";
 import ChatBox from "./ChatBox";
 import Header from "./Header";
@@ -5,6 +7,19 @@ import SideBar from "./SideBar";
 import styles from './chat.module.scss';
 
 function Chat() {
+
+    useEffect(() => {
+        function onConnect() {
+            console.log('connected')
+        }
+
+        socket.on('connect', onConnect);
+
+        return () => {
+            socket.off('connect', onConnect);
+        }
+    }, [])
+
     return (
         <main>
             <Row id="chat" className={`ms-0 ${styles.limitHeight} ${styles.chat}`} style={{ width: "100%" }}>
