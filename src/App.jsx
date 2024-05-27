@@ -1,13 +1,16 @@
 import { Provider } from 'react-redux';
-import Chat from './Components/Chat';
+import { RouterProvider } from 'react-router-dom';
+import { PersistGate } from 'redux-persist/integration/react';
 import './global.scss';
-import { store } from './redux/store';
+import { persistor, store } from './redux/store';
+import { router } from './routers';
 
 function App() {
-
   return (
     <Provider store={store}>
-      <Chat />
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router} />
+      </PersistGate>
     </Provider>
   )
 }

@@ -1,8 +1,28 @@
 import { configureStore } from '@reduxjs/toolkit'
-import chatReducer from './chat'
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
+import { combineReducers } from '@reduxjs/toolkit';
+import authReducer from './auth';
+import chatReducer from './chat';
+
+const rootReducer = combineReducers({
+    auth: authReducer,
+    chat: chatReducer
+});
+
+const persistConfig = {
+    key: 'root',
+    storage,
+    whitelist: ['auth']
+}
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
-    reducer: {
-        chat: chatReducer
-    },
+    reducer: persistedReducer,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+        serializableCheck: false
+    })
+
 })
+
+export const persistor = persistStore(store)
