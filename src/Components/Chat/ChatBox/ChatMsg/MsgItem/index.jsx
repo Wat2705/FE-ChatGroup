@@ -1,7 +1,7 @@
 import styles from "./itemmsg.module.scss";
 import IsViewImg from "@/assets/img/Vector.png";
 
-export default function MsgItem({ text, isUser, isView, user }) {
+export default function MsgItem({ text, isUser, isView, user, time }) {
     return (
         <div
             className={`${styles.msg} ${isUser ? styles.user : ''} mb-3`}
@@ -12,7 +12,7 @@ export default function MsgItem({ text, isUser, isView, user }) {
                 </div>
                 <div>
                     <span>
-                        19:57
+                        {time}
                         {isView && (
                             <img className="ms-2" src={IsViewImg} alt="" />
                         )}

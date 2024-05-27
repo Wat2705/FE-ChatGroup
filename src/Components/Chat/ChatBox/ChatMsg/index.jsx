@@ -13,6 +13,7 @@ export default function ChatMsg() {
                     isUser={e.isSender}
                     text={e.msg}
                     user={e.user}
+                    time={e.time}
                     className={e.isSender ? "cia" : ''}
                 />
             })}

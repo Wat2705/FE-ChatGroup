@@ -4,19 +4,23 @@ import { SendOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import { useDispatch } from "react-redux";
 import styles from "../chatbox.module.scss";
+import dayjs from "dayjs";
 
 export default function ChatInput() {
     const [form] = Form.useForm();
     const dispatch = useDispatch()
 
     const handleSubmit = (data) => {
+        let time = dayjs(new Date()).format('hh:mm')
         if (data.msg != '' && data.msg != undefined) {
             dispatch(sendingMessage({
                 msg: data.msg,
-                user: 'Tôi'
+                user: 'Tôi',
+                time
             }))
             socket.emit('sendMessagePublic', {
-                msg: data.msg
+                msg: data.msg,
+                time
             })
             form.setFieldValue('msg', '')
         }

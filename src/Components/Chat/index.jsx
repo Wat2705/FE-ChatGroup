@@ -1,5 +1,5 @@
 import { socket } from "@/config/socket";
-import { receivedMessage } from "@/redux/chat";
+import { getUserList, receivedMessage } from "@/redux/chat";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Col, Row } from "reactstrap";
@@ -16,15 +16,21 @@ function Chat() {
             console.log('connected')
         }
 
+        function onGetUserList(data) {
+            dispatch(getUserList(data))
+        }
+
         function onReceive(data) {
             dispatch(receivedMessage(data))
         }
 
         socket.on('connect', onConnect);
+        socket.on('getUserList', onGetUserList)
         socket.on('receiveMessagePublic', onReceive)
 
         return () => {
             socket.off('connect', onConnect);
+            socket.off('getUserList', onGetUserList)
             socket.off('receiveMessagePublic', onReceive)
         }
     }, [])
