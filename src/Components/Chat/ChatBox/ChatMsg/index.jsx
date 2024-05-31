@@ -15,6 +15,7 @@ export default function ChatMsg() {
                     user={e.user}
                     time={e.time}
                     className={e.isSender ? "cia" : ''}
+                    isImg={e.msg.includes('data:image')}
                 />
             })}
         </div>

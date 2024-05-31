@@ -13,7 +13,7 @@ function Chat() {
 
     useEffect(() => {
         function onConnect() {
-            console.log('connected')
+
         }
 
         function onGetUserList(data) {
