@@ -1,15 +1,17 @@
 import { socket } from "@/config/socket";
 import { getUserList, receivedMessage } from "@/redux/chat";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Col, Row } from "reactstrap";
 import ChatBox from "./ChatBox";
 import Header from "./Header";
 import SideBar from "./SideBar";
 import styles from './chat.module.scss';
+import Setting from "./Setting";
 
 function Chat() {
     const dispatch = useDispatch()
+    const isSettingOpen = useSelector(state => state.toggle.isSettingOpen)
 
     useEffect(() => {
         function onConnect() {
@@ -46,6 +48,7 @@ function Chat() {
                         <Header className="py-3 custom-header-account" />
                         <ChatBox />
                     </div>
+                    <Setting />
                 </Col>
             </Row>
         </main>

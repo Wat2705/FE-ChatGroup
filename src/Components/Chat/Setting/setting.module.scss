@@ -1,0 +1,144 @@
+.wp {
+    width: 30%;
+    height: 100vh;
+    border-left: 1px solid #ccc;
+    transition: all ease-in .2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-shrink: 0;
+
+    &.disable {
+        width: 0;
+        overflow: hidden;
+    }
+
+    &.active {
+        width: 350px;
+
+        @media (max-width: 576px) {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 999999999;
+            background: #fff;
+        }
+    }
+}
+
+.headerInfo {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 6px !important;
+
+    button {
+        font-size: 24px;
+
+        &:first-child {
+            font-size: 30px;
+        }
+    }
+}
+
+
+
+.content {
+    flex: 1;
+    overflow: auto;
+    padding: 10px 20px;
+}
+
+.oneStep {
+    flex: 1;
+    overflow: auto;
+
+    .note {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+        overflow: hidden;
+        text-align: justify;
+    }
+}
+
+
+img.thumbnail {
+    width: 100%;
+    object-fit: cover;
+    height: 100%;
+}
+
+.introduce {
+    height: 400px;
+    position: relative;
+
+    h5 {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        color: #fff;
+        font-size: 24px;
+        text-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.2);
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+    }
+}
+
+.nav {
+
+    button {
+        outline: none;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        background-color: transparent;
+    }
+}
+
+.customizeEdit {
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+
+    .overlay {
+        background-color: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(1px);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    &:hover {
+        cursor: pointer;
+
+        .overlay {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+    }
+
+    span {
+        position: absolute;
+        height: 50px;
+        width: 100px;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 10;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+        backdrop-filter: 6px;
+        color: #fff;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+}

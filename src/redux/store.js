@@ -4,10 +4,12 @@ import storage from 'redux-persist/lib/storage'
 import { combineReducers } from '@reduxjs/toolkit';
 import authReducer from './auth';
 import chatReducer from './chat';
+import toggleReducer from './toggle';
 
 const rootReducer = combineReducers({
     auth: authReducer,
-    chat: chatReducer
+    chat: chatReducer,
+    toggle: toggleReducer
 });
 
 const persistConfig = {
@@ -22,7 +24,6 @@ export const store = configureStore({
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false
     })
-
 })
 
 export const persistor = persistStore(store)
