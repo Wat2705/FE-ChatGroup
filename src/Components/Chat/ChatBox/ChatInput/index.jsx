@@ -2,13 +2,14 @@ import { socket } from "@/config/socket";
 import { sendingMessage } from "@/redux/chat";
 import { SendOutlined, UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Upload } from "antd";
-import dayjs from "dayjs";
-import { useDispatch } from "react-redux";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "../chatbox.module.scss";
 
 export default function ChatInput() {
     const [form] = Form.useForm();
     const dispatch = useDispatch()
+    const userId = useSelector(state => state.auth.id)
 
     const getBase64 = (img, callback) => {
         const reader = new FileReader();
@@ -25,14 +26,9 @@ export default function ChatInput() {
             img.onload = function () {
                 const canvas = document.createElement("canvas");
                 const ctx = canvas.getContext('2d');
-                const width = img.width;
-                const height = img.height;
-                const aspectRatio = width / height;
-                const newWidth = Math.sqrt(maxSizeInBytes * aspectRatio);
-                const newHeight = Math.sqrt(maxSizeInBytes / aspectRatio);
-                canvas.width = newWidth;
-                canvas.height = newHeight;
-                ctx.drawImage(img, 0, 0, newWidth, newHeight);
+                canvas.width = 200;
+                canvas.height = 200;
+                ctx.drawImage(img, 0, 0, 200, 200);
                 let quality = 0.8;
                 let dataURL = canvas.toDataURL(type, quality);
                 resolve(dataURL);
@@ -48,38 +44,43 @@ export default function ChatInput() {
         },
         onChange(info) {
             if (info.file.status == 'done') {
-                let time = dayjs(new Date()).format('hh:mm')
                 getBase64(info.file.originFileObj, (url) => {
                     resizeBase64Image(url, info.file.type).then(img => {
                         dispatch(sendingMessage({
-                            msg: img,
-                            user: 'Tôi',
-                            time
+                            imageId: {
+                                base64: img
+                            },
+                            id: userId
                         }))
                         socket.emit('sendMessagePublic', {
-                            msg: img,
-                            time
+                            base64: img,
+                            id: userId,
                         })
+                        axios.post(`http://localhost:8080/message/send`, {
+                            imageId: info.file.response.id,
+                            senderId: userId
+                        }).then(res => console.log(res))
                     })
-
                 });
             }
         }
     }
 
-    const handleSubmit = (data) => {
-        let time = dayjs(new Date()).format('hh:mm')
+    const handleSubmit = async (data) => {
         if (data.msg != '' && data.msg != undefined) {
             dispatch(sendingMessage({
-                msg: data.msg,
-                user: 'Tôi',
-                time
-            }))
+                content: data.msg,
+                id: userId,
+            }));
             socket.emit('sendMessagePublic', {
-                msg: data.msg,
-                time
-            })
-            form.setFieldValue('msg', '')
+                content: data.msg,
+                id: userId,
+            });
+            form.setFieldValue('msg', '');
+            await axios.post(`http://localhost:8080/message/send`, {
+                content: data.msg,
+                senderId: userId
+            });
         }
     }
 

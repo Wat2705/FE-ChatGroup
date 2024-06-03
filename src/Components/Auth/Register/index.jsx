@@ -10,19 +10,12 @@ export default function Register() {
     const handleSubmit = async (value) => {
         let { rePassword, ...rest } = value
         try {
-            const res = await axios({
+            await axios({
                 method: 'POST',
                 data: rest,
                 url: 'http://localhost:8080/register'
             })
-            api.success({
-                message: res.data.message,
-                description: 'Bạn sẽ được chuyển hướng đến trang đăng nhập sau 2s!',
-                duration: 1
-            });
-            setTimeout(() => {
-                nav('/login')
-            }, 2000)
+            nav('/login')
         } catch (error) {
             api.error({
                 message: error.response.data.message,
@@ -34,7 +27,6 @@ export default function Register() {
 
     return (
         <>
-            {contextHolder}
             <div className={styles.jsxRightAuthentication}>
                 <span className={styles.jaxSd}>
                     Đã có tải khoản?{" "}

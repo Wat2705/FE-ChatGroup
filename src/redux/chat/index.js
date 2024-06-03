@@ -5,32 +5,40 @@ const initialState = {
     userList: []
 };
 
+
 export const chatSlice = createSlice({
     name: "chat",
     initialState,
     reducers: {
         sendingMessage: (state, action) => {
             state.allMessage.push({
-                isSender: true,
-                msg: action.payload.msg,
-                user: action.payload.user,
-                time: action.payload.time
+                content: action.payload.content,
+                senderId: {
+                    _id: action.payload.id
+                },
+                imageId: action.payload.imageId,
+                created_at: new Date()
             })
         },
         receivedMessage: (state, action) => {
             state.allMessage.push({
-                isSender: false,
-                msg: action.payload.msg,
-                user: action.payload.user.name,
-                time: action.payload.time,
+                content: action.payload.content,
+                senderId: {
+                    _id: action.payload.id
+                },
+                imageId: action.payload.imageId,
+                created_at: new Date()
             })
         },
         getUserList: (state, action) => {
             state.userList = action.payload
+        },
+        storeMessage: (state, action) => {
+            state.allMessage = action.payload
         }
     },
 });
 
-export const { sendingMessage, receivedMessage, getUserList } = chatSlice.actions;
+export const { sendingMessage, receivedMessage, getUserList, storeMessage } = chatSlice.actions;
 
 export default chatSlice.reducer;
