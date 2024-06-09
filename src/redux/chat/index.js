@@ -5,7 +5,6 @@ const initialState = {
     userList: []
 };
 
-
 export const chatSlice = createSlice({
     name: "chat",
     initialState,
@@ -24,7 +23,8 @@ export const chatSlice = createSlice({
             state.allMessage.push({
                 content: action.payload.content,
                 senderId: {
-                    _id: action.payload.id
+                    _id: action.payload.id,
+                    name: action.payload.name
                 },
                 imageId: action.payload.imageId,
                 created_at: new Date()

@@ -23,17 +23,25 @@ function Chat() {
         }
 
         function onReceive(data) {
+            console.log(data)
             dispatch(receivedMessage(data))
+        }
+
+        function onReceiveUser(data) {
+            console.log(data)
+            dispatch(getUserList(data))
         }
 
         socket.on('connect', onConnect);
         socket.on('getUserList', onGetUserList)
         socket.on('receiveMessagePublic', onReceive)
+        socket.on('receiveUser', onReceiveUser)
 
         return () => {
             socket.off('connect', onConnect);
             socket.off('getUserList', onGetUserList)
             socket.off('receiveMessagePublic', onReceive)
+            socket.off('receiveUser', onReceiveUser)
         }
     }, [])
 

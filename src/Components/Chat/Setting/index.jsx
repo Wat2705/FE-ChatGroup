@@ -1,31 +1,74 @@
 import { toggleSetting } from "@/redux/toggle";
-import { Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { Button, Flex, Upload } from "antd";
+import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./setting.module.scss";
+import { socket } from "@/config/socket";
+
+
+const getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+};
 
 export default function Setting() {
     const isSettingOpen = useSelector((state) => state.toggle.isSettingOpen);
     const [edit, setIsEdit] = useState(false);
-    const refInput = useRef(null);
+    const [imageUrl, setImageUrl] = useState();
+    const [originFile, setOriginFile] = useState(null)
 
     const dispatch = useDispatch()
     const token = localStorage.getItem('token')
     const decode = jwtDecode(token)
 
     if (isSettingOpen) {
-        const handleClickChangeThumbnail = () => {
-            const inputElement = refInput.current;
-
-            if (inputElement) {
-                inputElement.click();
-            }
-        }
+        const beforeUpload = (file) => {
+            getBase64(file, (url) => {
+                setImageUrl(url);
+                setOriginFile(file)
+            });
+            return false;
+        };
 
         const handleSubmit = () => {
-            console.log(document.querySelector('#avatar').files[0])
+            let formData = new FormData();
+            formData.append('avatar', originFile)
+            if (document.querySelector('#name').value != '') {
+                formData.append('name', document.querySelector('#name').value)
+            }
+            axios.post('http://localhost:8080/avatar', formData, {
+                headers: {
+                    "Content-Type": 'multipart/form-data',
+                    Authorization: localStorage.getItem('token')
+                }
+            }).then(res => {
+                setIsEdit(false)
+                socket.emit('refreshUser')
+            })
         }
+
+        const uploadButton = (
+            <button
+                style={{
+                    border: 0,
+                    background: 'none',
+                }}
+                type="button"
+            >
+                <PlusOutlined />
+                <div
+                    style={{
+                        marginTop: 8,
+                    }}
+                >
+                    Set Avatar
+                </div>
+            </button>
+        );
 
         return (
             <div className={`${styles.wp} ${isSettingOpen ? "active" : "disable"}`}>
@@ -61,19 +104,27 @@ export default function Setting() {
                     </div>
                 ) : (
                     <div className={styles.content}>
-                        <div
-                            className={`${styles.introduce} ${styles.customizeEdit}`}
-                            onClick={handleClickChangeThumbnail}
-                        >
-                            <img
-                                className={`${styles.thumbnail} ${styles.edit}`}
-                                src="https://images.pexels.com/photos/3654869/pexels-photo-3654869.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-                                alt=""
-                            />
-                            <span>Thay Hình Ảnh</span>
-                            <div className={styles.overlay}></div>
-                            <input ref={refInput} type="file" id="avatar" hidden />
-                        </div>
+                        <Flex gap="middle" wrap justify="center">
+                            <Upload
+                                name="avatar"
+                                listType="picture-card"
+                                className="avatar-uploader"
+                                showUploadList={false}
+                                beforeUpload={beforeUpload}
+                            >
+                                {imageUrl ? (
+                                    <img
+                                        src={imageUrl}
+                                        alt="avatar"
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                    />
+                                ) : (
+                                    uploadButton
+                                )}
+                            </Upload>
+                        </Flex>
                         <div className="row mt-4">
                             <div className="mb-3">
                                 <label className="form-label">

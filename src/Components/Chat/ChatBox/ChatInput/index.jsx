@@ -56,9 +56,16 @@ export default function ChatInput() {
                             base64: img,
                             id: userId,
                         })
-                        axios.post(`http://localhost:8080/message/send`, {
-                            imageId: info.file.response.id,
-                            senderId: userId
+                        axios({
+                            url: `http://localhost:8080/message/send`,
+                            method: 'POST',
+                            headers: {
+                                Authorization: localStorage.getItem('token')
+                            },
+                            data: {
+                                imageId: info.file.response.id,
+                                senderId: userId
+                            }
                         }).then(res => console.log(res))
                     })
                 });
@@ -77,10 +84,17 @@ export default function ChatInput() {
                 id: userId,
             });
             form.setFieldValue('msg', '');
-            await axios.post(`http://localhost:8080/message/send`, {
-                content: data.msg,
-                senderId: userId
-            });
+            await axios({
+                url: `http://localhost:8080/message/send`,
+                method: 'POST',
+                headers: {
+                    Authorization: localStorage.getItem('token')
+                },
+                data: {
+                    content: data.msg,
+                    senderId: userId
+                }
+            })
         }
     }
 

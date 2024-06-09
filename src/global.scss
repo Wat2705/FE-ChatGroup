@@ -99,8 +99,12 @@ html *::-webkit-scrollbar-track {
     overflow: hidden;
 }
 
+.ant-image-mask:hover {
+    opacity: 0 !important;
+}
+
 @media (max-width: 768px) {
-    .noPaddingR ight {
+    .noPaddingRight {
         padding-right: 0 !important;
     }
 }

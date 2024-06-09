@@ -1,20 +1,22 @@
 import { useSelector } from "react-redux";
 import AccountItem from "../AccountItem";
+import dayjs from "dayjs";
 
 export default function ListUser(props) {
     const userList = useSelector(state => state.chat.userList)
+    console.log(userList[0])
 
     return (
         <>
-            {userList?.map((item, index) => (
+            {userList?.map((item) => (
                 <AccountItem
-                    title={item.name}
-                    time={"10:57"}
-                    img={"https://media.thuonghieucongluan.vn/uploads/2018_06_06/5-1528272790.jpg"}
-                    lastMsg={item.email}
+                    title={item.user.name}
+                    time={dayjs(item.created_at).format('hh:mm')}
+                    img={`http://localhost:8080/${item.user.avatarId?.path}`}
+                    lastMsg={item.user.email}
                     isShowMenu={props.isShowMenu}
                     isClickable={props.isClickable}
-                    key={index}
+                    key={item._id}
                 />
             ))}
         </>
