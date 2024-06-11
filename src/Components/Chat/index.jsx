@@ -1,18 +1,16 @@
 import { socket } from "@/config/socket";
 import { getUserList, receivedMessage } from "@/redux/chat";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Col, Row } from "reactstrap";
 import ChatBox from "./ChatBox";
 import Header from "./Header";
+import Setting from "./Setting";
 import SideBar from "./SideBar";
 import styles from './chat.module.scss';
-import Setting from "./Setting";
 
 function Chat() {
     const dispatch = useDispatch()
-    const isSettingOpen = useSelector(state => state.toggle.isSettingOpen)
-
     useEffect(() => {
         function onConnect() {
 

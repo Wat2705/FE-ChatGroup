@@ -10,11 +10,7 @@ export default function Register() {
     const handleSubmit = async (value) => {
         let { rePassword, ...rest } = value
         try {
-            await axios({
-                method: 'POST',
-                data: rest,
-                url: 'http://localhost:8080/register'
-            })
+            await axios.post('/register', rest)
             nav('/login')
         } catch (error) {
             api.error({

@@ -40,7 +40,7 @@ export default function Setting() {
             if (document.querySelector('#name').value != '') {
                 formData.append('name', document.querySelector('#name').value)
             }
-            axios.post('http://localhost:8080/avatar', formData, {
+            axios.post('/avatar', formData, {
                 headers: {
                     "Content-Type": 'multipart/form-data',
                     Authorization: localStorage.getItem('token')

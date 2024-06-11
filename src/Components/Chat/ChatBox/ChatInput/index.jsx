@@ -13,7 +13,7 @@ export default function ChatInput() {
 
     const props = {
         name: 'image',
-        action: 'http://localhost:8080/upload',
+        action: '/upload',
         headers: {
             authorization: 'authorization-text',
         },
@@ -28,7 +28,7 @@ export default function ChatInput() {
                     id: userId
                 })
                 axios({
-                    url: `http://localhost:8080/message/send`,
+                    url: `/message/send`,
                     method: 'POST',
                     headers: {
                         Authorization: localStorage.getItem('token')
@@ -54,7 +54,7 @@ export default function ChatInput() {
             });
             form.setFieldValue('msg', '');
             await axios({
-                url: `http://localhost:8080/message/send`,
+                url: `/message/send`,
                 method: 'POST',
                 headers: {
                     Authorization: localStorage.getItem('token')

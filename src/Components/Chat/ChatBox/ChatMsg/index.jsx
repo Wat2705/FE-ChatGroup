@@ -13,12 +13,13 @@ export default function ChatMsg() {
 
     useEffect(() => {
         axios({
-            url: 'http://localhost:8080/message/all',
+            url: '/message/all',
             method: 'GET',
             headers: {
                 Authorization: localStorage.getItem('token')
             }
         }).then(res => {
+            console.log(res)
             dispatch(storeMessage(res.data))
         })
     }, [])

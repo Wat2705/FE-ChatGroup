@@ -1,5 +1,6 @@
 import { Image } from "antd";
 import styles from "./itemmsg.module.scss";
+const { VITE_BASE_URL } = import.meta.env
 
 export default function MsgItem({ text, isUser, user, time, isImg = false, image = '' }) {
     return (
@@ -13,7 +14,7 @@ export default function MsgItem({ text, isUser, user, time, isImg = false, image
                     >
                         {user} : {isImg ? null : text}
                     </div>
-                    {isImg ? <div style={{ position: 'unset' }}><Image style={{ objectFit: 'contain', width: '100%', height: '30%%' }} src={`http://localhost:8080/${image}`} alt="" /></div> : null}
+                    {isImg ? <div style={{ position: 'unset' }}><Image style={{ objectFit: 'contain', width: '100%', height: '30%%' }} src={`${VITE_BASE_URL}/${image}`} alt="" /></div> : null}
                 </div>
                 <div>
                     <span style={{ marginTop: '20px' }}>

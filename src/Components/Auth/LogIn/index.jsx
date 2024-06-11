@@ -11,11 +11,7 @@ export default function LogIn() {
 
     const handleSubmit = async (value) => {
         try {
-            let res = await axios({
-                method: 'POST',
-                url: 'http://localhost:8080/login',
-                data: value
-            })
+            let res = await axios.post(`/login`, value)
             dispatch(loginSuccess(res.data))
             window.location.href = '/'
         } catch (error) {
