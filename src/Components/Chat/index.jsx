@@ -15,7 +15,7 @@ function Chat() {
 
     useEffect(() => {
         function onConnect() {
-            console.log('Connected')
+
         }
 
         function onGetUserList(data) {
@@ -23,12 +23,10 @@ function Chat() {
         }
 
         function onReceive(data) {
-            console.log(data)
             dispatch(receivedMessage(data))
         }
 
         function onReceiveUser(data) {
-            console.log(data)
             dispatch(getUserList(data))
         }
 

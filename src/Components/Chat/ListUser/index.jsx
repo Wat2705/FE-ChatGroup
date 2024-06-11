@@ -4,7 +4,6 @@ import dayjs from "dayjs";
 
 export default function ListUser(props) {
     const userList = useSelector(state => state.chat.userList)
-    console.log(userList[0])
 
     return (
         <>

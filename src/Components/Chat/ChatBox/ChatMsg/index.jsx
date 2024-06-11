@@ -38,7 +38,7 @@ export default function ChatMsg() {
                     time={dayjs(e.created_at).format('hh:mm')}
                     className={e.senderId['_id'] == userId ? "cia" : ''}
                     isImg={e.content == undefined}
-                    image={(e.content == undefined ? e.imageId['base64'] : null)}
+                    image={(e.content == undefined ? e?.imageId?.path : null)}
                 />
             })}
         </div>

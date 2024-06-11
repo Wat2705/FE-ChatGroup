@@ -11,31 +11,6 @@ export default function ChatInput() {
     const dispatch = useDispatch()
     const userId = useSelector(state => state.auth.id)
 
-    const getBase64 = (img, callback) => {
-        const reader = new FileReader();
-        reader.addEventListener('load', () => callback(reader.result));
-        reader.readAsDataURL(img);
-    };
-
-    const resizeBase64Image = (base64Image, type) => {
-        return new Promise((resolve, reject) => {
-            const maxSizeInMB = 1;
-            const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
-            const img = new Image();
-            img.src = base64Image;
-            img.onload = function () {
-                const canvas = document.createElement("canvas");
-                const ctx = canvas.getContext('2d');
-                canvas.width = 200;
-                canvas.height = 200;
-                ctx.drawImage(img, 0, 0, 200, 200);
-                let quality = 0.8;
-                let dataURL = canvas.toDataURL(type, quality);
-                resolve(dataURL);
-            };
-        });
-    }
-
     const props = {
         name: 'image',
         action: 'http://localhost:8080/upload',
@@ -44,31 +19,25 @@ export default function ChatInput() {
         },
         onChange(info) {
             if (info.file.status == 'done') {
-                getBase64(info.file.originFileObj, (url) => {
-                    resizeBase64Image(url, info.file.type).then(img => {
-                        dispatch(sendingMessage({
-                            imageId: {
-                                base64: img
-                            },
-                            id: userId
-                        }))
-                        socket.emit('sendMessagePublic', {
-                            base64: img,
-                            id: userId,
-                        })
-                        axios({
-                            url: `http://localhost:8080/message/send`,
-                            method: 'POST',
-                            headers: {
-                                Authorization: localStorage.getItem('token')
-                            },
-                            data: {
-                                imageId: info.file.response.id,
-                                senderId: userId
-                            }
-                        }).then(res => console.log(res))
-                    })
-                });
+                dispatch(sendingMessage({
+                    imageId: info.file.response,
+                    id: userId
+                }))
+                socket.emit('sendMessagePublic', {
+                    path: info.file.response.path,
+                    id: userId
+                })
+                axios({
+                    url: `http://localhost:8080/message/send`,
+                    method: 'POST',
+                    headers: {
+                        Authorization: localStorage.getItem('token')
+                    },
+                    data: {
+                        imageId: info.file.response._id,
+                        senderId: userId
+                    }
+                }).then(res => { })
             }
         }
     }
