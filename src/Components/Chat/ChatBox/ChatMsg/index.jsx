@@ -19,7 +19,6 @@ export default function ChatMsg() {
                 Authorization: localStorage.getItem('token')
             }
         }).then(res => {
-            console.log(res)
             dispatch(storeMessage(res.data))
         })
     }, [])

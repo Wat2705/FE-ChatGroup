@@ -12,9 +12,7 @@ import styles from './chat.module.scss';
 function Chat() {
     const dispatch = useDispatch()
     useEffect(() => {
-        function onConnect() {
-
-        }
+        function onConnect() { }
 
         function onGetUserList(data) {
             dispatch(getUserList(data))

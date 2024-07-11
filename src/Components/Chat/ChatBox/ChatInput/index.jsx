@@ -5,6 +5,7 @@ import { Button, Form, Input, Upload } from "antd";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "../chatbox.module.scss";
+const { VITE_BASE_URL } = import.meta.env
 
 export default function ChatInput() {
     const [form] = Form.useForm();
@@ -13,7 +14,7 @@ export default function ChatInput() {
 
     const props = {
         name: 'image',
-        action: '/upload',
+        action: `${VITE_BASE_URL}/upload`,
         headers: {
             authorization: 'authorization-text',
         },

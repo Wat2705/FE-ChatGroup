@@ -1,3 +1,4 @@
+import { socket } from "@/config/socket";
 import { toggleSetting } from "@/redux/toggle";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Flex, Upload } from "antd";
@@ -6,8 +7,6 @@ import { jwtDecode } from "jwt-decode";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./setting.module.scss";
-import { socket } from "@/config/socket";
-
 
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
@@ -19,35 +18,39 @@ export default function Setting() {
     const isSettingOpen = useSelector((state) => state.toggle.isSettingOpen);
     const [edit, setIsEdit] = useState(false);
     const [imageUrl, setImageUrl] = useState();
-    const [originFile, setOriginFile] = useState(null)
+    const [originFile, setOriginFile] = useState(null);
 
-    const dispatch = useDispatch()
-    const token = localStorage.getItem('token')
-    const decode = jwtDecode(token)
+    const dispatch = useDispatch();
+    const token = localStorage.getItem('token');
+    const decode = jwtDecode(token);
 
     if (isSettingOpen) {
+
         const beforeUpload = (file) => {
             getBase64(file, (url) => {
                 setImageUrl(url);
-                setOriginFile(file)
+                setOriginFile(file);
             });
             return false;
         };
 
         const handleSubmit = () => {
             let formData = new FormData();
-            formData.append('avatar', originFile)
+            formData.append('avatar', originFile);
             if (document.querySelector('#name').value != '') {
-                formData.append('name', document.querySelector('#name').value)
+                formData.append('name', document.querySelector('#name').value);
             }
             axios.post('/avatar', formData, {
                 headers: {
                     "Content-Type": 'multipart/form-data',
                     Authorization: localStorage.getItem('token')
                 }
-            }).then(res => {
-                setIsEdit(false)
-                socket.emit('refreshUser')
+            }).then(() => {
+                setIsEdit(false);
+                socket.emit('refreshUser', {
+                    id: jwtDecode(localStorage.getItem('token')).id,
+                    path: imageUrl
+                });
             })
         }
 
