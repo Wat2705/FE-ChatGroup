@@ -6,7 +6,9 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import styles from "./setting.module.scss";
+const { VITE_BASE_URL } = import.meta.env
 
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
@@ -16,16 +18,19 @@ const getBase64 = (img, callback) => {
 
 export default function Setting() {
     const isSettingOpen = useSelector((state) => state.toggle.isSettingOpen);
+    const userList = useSelector(state => state.chat.userList)
     const [edit, setIsEdit] = useState(false);
-    const [imageUrl, setImageUrl] = useState();
+    const [imageUrl, setImageUrl] = useState(null);
     const [originFile, setOriginFile] = useState(null);
 
     const dispatch = useDispatch();
+    const nav = useNavigate()
     const token = localStorage.getItem('token');
     const decode = jwtDecode(token);
 
-    if (isSettingOpen) {
+    let editUser = '';
 
+    if (isSettingOpen) {
         const beforeUpload = (file) => {
             getBase64(file, (url) => {
                 setImageUrl(url);
@@ -34,9 +39,20 @@ export default function Setting() {
             return false;
         };
 
+        userList.filter(e => {
+            if (e.user._id == jwtDecode(localStorage.getItem('token')).id) {
+                editUser = e.user
+                if (imageUrl == null) {
+                    setImageUrl(`${VITE_BASE_URL}/${e.user.avatarId.path}`)
+                }
+            }
+        });
+
         const handleSubmit = () => {
             let formData = new FormData();
-            formData.append('avatar', originFile);
+            if (originFile != null && imageUrl != '') {
+                formData.append('avatar', originFile);
+            }
             if (document.querySelector('#name').value != '') {
                 formData.append('name', document.querySelector('#name').value);
             }
@@ -49,7 +65,7 @@ export default function Setting() {
                 setIsEdit(false);
                 socket.emit('refreshUser', {
                     id: jwtDecode(localStorage.getItem('token')).id,
-                    path: imageUrl
+                    path: imageUrl == undefined ? '' : imageUrl
                 });
             })
         }
@@ -103,11 +119,18 @@ export default function Setting() {
                                 <p>Name: {decode.name}</p>
                                 <p>Email: {decode.email}</p>
                             </div>
+                            <div className="d-flex justify-content-center">
+                                <Button htmlType="button" onClick={async () => {
+                                    await axios.post('/logout', { token: localStorage.getItem('token') })
+                                    localStorage.clear()
+                                    nav('/login')
+                                }}>Đăng xuất</Button>
+                            </div>
                         </div>
                     </div>
                 ) : (
                     <div className={styles.content}>
-                        <Flex gap="middle" wrap justify="center">
+                        <Flex gap="middle" wrap justify="center" align="center">
                             <Upload
                                 name="avatar"
                                 listType="picture-card"
@@ -127,6 +150,10 @@ export default function Setting() {
                                     uploadButton
                                 )}
                             </Upload>
+                            {imageUrl == '' ? '' : <Button onClick={() => {
+                                setImageUrl('')
+                                setOriginFile(null)
+                            }}>Remove</Button>}
                         </Flex>
                         <div className="row mt-4">
                             <div className="mb-3">
@@ -136,7 +163,7 @@ export default function Setting() {
                                 <input
                                     type="text"
                                     className="form-control"
-                                    placeholder="Nhập tên mới"
+                                    placeholder={editUser == '' ? 'Nhập tên mới' : editUser.name}
                                     id="name"
                                 />
                             </div>

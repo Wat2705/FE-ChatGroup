@@ -74,6 +74,7 @@ export default function LogIn() {
                                 <Input.Password
                                     className={styles.jsxInputAuthentication}
                                     placeholder="Nhập password của bạn eg: matkhaucauban"
+                                    autoComplete="on"
                                 />
                             </Form.Item>
                             <Form.Item>

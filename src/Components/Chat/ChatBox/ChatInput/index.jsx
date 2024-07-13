@@ -5,6 +5,7 @@ import { Button, Form, Input, Upload } from "antd";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "../chatbox.module.scss";
+import { message } from "antd";
 const { VITE_BASE_URL } = import.meta.env
 
 export default function ChatInput() {
@@ -45,26 +46,30 @@ export default function ChatInput() {
 
     const handleSubmit = async (data) => {
         if (data.msg != '' && data.msg != undefined) {
-            dispatch(sendingMessage({
-                content: data.msg,
-                id: userId,
-            }));
-            socket.emit('sendMessagePublic', {
-                content: data.msg,
-                id: userId,
-            });
-            form.setFieldValue('msg', '');
-            await axios({
-                url: `/message/send`,
-                method: 'POST',
-                headers: {
-                    Authorization: localStorage.getItem('token')
-                },
-                data: {
+            try {
+                await axios({
+                    url: `/message/send`,
+                    method: 'POST',
+                    headers: {
+                        Authorization: localStorage.getItem('token')
+                    },
+                    data: {
+                        content: data.msg,
+                        senderId: userId
+                    }
+                })
+                dispatch(sendingMessage({
                     content: data.msg,
-                    senderId: userId
-                }
-            })
+                    id: userId,
+                }));
+                socket.emit('sendMessagePublic', {
+                    content: data.msg,
+                    id: userId,
+                });
+                form.setFieldValue('msg', '');
+            } catch (error) {
+                message.error(error.response.data.message)
+            }
         }
     }
 

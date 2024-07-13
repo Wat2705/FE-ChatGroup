@@ -80,6 +80,8 @@ export default function Register() {
                                 <Input.Password
                                     className={styles.jsxInputAuthentication}
                                     placeholder="Nhập password của bạn eg: matkhaucauban"
+                                    autoComplete="on"
+
                                 />
                             </Form.Item>
                             <Form.Item name='rePassword' label='Nhập lại mật khẩu' rules={[
@@ -103,6 +105,7 @@ export default function Register() {
                                 <Input.Password
                                     className={styles.jsxInputAuthentication}
                                     placeholder="Nhập lại password của bạn"
+                                    autoComplete="off"
                                 />
                             </Form.Item>
                             <Form.Item name='phone' label='Nhập số điện thoại' rules={[
