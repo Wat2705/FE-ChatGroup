@@ -11,6 +11,7 @@ import styles from './chat.module.scss';
 
 function Chat() {
     const dispatch = useDispatch()
+
     useEffect(() => {
         function onConnect() { }
 

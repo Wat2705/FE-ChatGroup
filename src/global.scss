@@ -108,3 +108,8 @@ html *::-webkit-scrollbar-track {
         padding-right: 0 !important;
     }
 }
+
+#drawer.ant-drawer-content>.ant-drawer-body {
+    padding: 0 !important;
+    overflow: hidden;
+}

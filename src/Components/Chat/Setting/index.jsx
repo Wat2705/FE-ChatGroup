@@ -1,7 +1,7 @@
 import { socket } from "@/config/socket";
 import { toggleSetting } from "@/redux/toggle";
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Flex, Upload } from "antd";
+import { Button, Drawer, Flex, Upload } from "antd";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useState } from "react";
@@ -25,9 +25,6 @@ export default function Setting() {
 
     const dispatch = useDispatch();
     const nav = useNavigate()
-    const token = localStorage.getItem('token');
-    const decode = jwtDecode(token);
-
 
     let editUser = '';
 
@@ -91,89 +88,81 @@ export default function Setting() {
         );
 
         return (
-            <div className={`${styles.wp} ${isSettingOpen ? "active" : "disable"}`}>
-                <div className={`${styles.headerInfo} d-flex py-2 gap-2 justify-content-between align-items-center`}>
-                    <button className="btn" onClick={() => dispatch(toggleSetting())}>
-                        <i className="bi bi-x"></i>
-                    </button>
-                    <h4>Account Info</h4>
-                    <button
-                        className="btn"
-                        onClick={() => {
-                            setIsEdit(!edit);
-                        }}
-                    >
-                        <i className="bi bi-pencil-fill"></i>
-                    </button>
-                </div>
-                {!edit ? (
-                    <div className={styles.oneStep}>
-                        <div className={styles.introduce}>
-                            <img
-                                className={styles.thumbnail}
-                                src="https://images.pexels.com/photos/3654869/pexels-photo-3654869.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-                                alt=""
-                            />
-                            <h5>Avatar</h5>
-                            <div className="px-2 py-4">
-                                <h4>User Info</h4>
-                                <p>Name: {editUser.name}</p>
-                                <p>Email: {editUser.email}</p>
-                            </div>
-                            <div className="d-flex justify-content-center">
-                                <Button htmlType="button" onClick={async () => {
-                                    await axios.post('/logout', { token: localStorage.getItem('token') })
-                                    localStorage.clear()
-                                    nav('/login')
-                                }}>Đăng xuất</Button>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className={styles.content}>
-                        <Flex gap="middle" wrap justify="center" align="center">
-                            <Upload
-                                name="avatar"
-                                listType="picture-card"
-                                className="avatar-uploader"
-                                showUploadList={false}
-                                beforeUpload={beforeUpload}
-                            >
-                                {imageUrl ? (
-                                    <img
-                                        src={imageUrl}
-                                        alt="avatar"
-                                        style={{
-                                            width: '100%',
-                                        }}
-                                    />
-                                ) : (
-                                    uploadButton
-                                )}
-                            </Upload>
-                            {imageUrl == '' ? '' : <Button onClick={() => {
-                                setImageUrl('')
-                                setOriginFile(null)
-                            }}>Remove</Button>}
-                        </Flex>
-                        <div className="row mt-4">
-                            <div className="mb-3">
-                                <label className="form-label">
-                                    <strong>Name</strong>
-                                </label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder={editUser == '' ? 'Nhập tên mới' : editUser.name}
-                                    id="name"
+            <Drawer id="drawer" title='Account Info' open={isSettingOpen} onClose={() => dispatch(toggleSetting())}>
+                <div className={`${styles.wp} ${isSettingOpen ? "active" : "disable"}`}>
+                    {!edit ? (
+                        <div className={styles.oneStep}>
+                            <div className={styles.introduce}>
+                                <img
+                                    className={styles.thumbnail}
+                                    src="https://images.pexels.com/photos/3654869/pexels-photo-3654869.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                                    alt=""
                                 />
+                                <h5>Avatar</h5>
+                                <div className="px-2 py-4">
+                                    <h4>User Info</h4>
+                                    <p>Name: {editUser.name}</p>
+                                    <p>Email: {editUser.email}</p>
+                                </div>
+                                <div className="d-flex justify-content-center gap-4">
+                                    <Button onClick={() => setIsEdit(true)}>Sửa</Button>
+                                    <Button htmlType="button" onClick={async () => {
+                                        await axios.post('/logout', { token: localStorage.getItem('token') })
+                                        localStorage.clear()
+                                        nav('/login')
+                                    }}>Đăng xuất</Button>
+                                </div>
                             </div>
-                            <Button onClick={handleSubmit}>Update</Button>
                         </div>
-                    </div>
-                )
-                }
-            </div >
+                    ) : (
+                        <div className={styles.content}>
+                            <Flex gap="middle" wrap justify="center" align="center">
+                                <Upload
+                                    name="avatar"
+                                    listType="picture-card"
+                                    className="avatar-uploader"
+                                    showUploadList={false}
+                                    beforeUpload={beforeUpload}
+                                >
+                                    {imageUrl ? (
+                                        <img
+                                            src={imageUrl}
+                                            alt="avatar"
+                                            style={{
+                                                width: '100%',
+                                            }}
+                                        />
+                                    ) : (
+                                        uploadButton
+                                    )}
+                                </Upload>
+                                {imageUrl == '' ? '' : <Button onClick={() => {
+                                    setImageUrl('')
+                                    setOriginFile(null)
+                                }}>Remove</Button>}
+                            </Flex>
+                            <div className="row mt-4">
+                                <div className="mb-3">
+                                    <label className="form-label">
+                                        <strong>Name</strong>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder={editUser == '' ? 'Nhập tên mới' : editUser.name}
+                                        id="name"
+                                    />
+                                </div>
+                                <div className="d-flex justify-content-center gap-4 ">
+                                    <Button onClick={handleSubmit}>Update</Button>
+                                    <Button onClick={() => setIsEdit(false)}>Exit</Button>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                    }
+                </div >
+            </Drawer>
         );
     }
 }
