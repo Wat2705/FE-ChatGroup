@@ -28,6 +28,7 @@ export default function Setting() {
     const token = localStorage.getItem('token');
     const decode = jwtDecode(token);
 
+
     let editUser = '';
 
     if (isSettingOpen) {
@@ -116,8 +117,8 @@ export default function Setting() {
                             <h5>Avatar</h5>
                             <div className="px-2 py-4">
                                 <h4>User Info</h4>
-                                <p>Name: {decode.name}</p>
-                                <p>Email: {decode.email}</p>
+                                <p>Name: {editUser.name}</p>
+                                <p>Email: {editUser.email}</p>
                             </div>
                             <div className="d-flex justify-content-center">
                                 <Button htmlType="button" onClick={async () => {
