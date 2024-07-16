@@ -1,28 +1,34 @@
-import { Button, Form, Input, notification } from "antd";
+import { Button, Form, Input, message } from "antd";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../auth.module.scss";
 
 export default function Register() {
-    const [api, contextHolder] = notification.useNotification();
     const nav = useNavigate()
+    const [messageApi, contextHolder] = message.useMessage();
 
     const handleSubmit = async (value) => {
         let { rePassword, ...rest } = value
         try {
             await axios.post('/register', rest)
-            nav('/login')
+            messageApi.open({
+                type: 'success',
+                content: 'Đăng ký thành công!'
+            })
+            setTimeout(() => {
+                nav('/login')
+            }, 500)
         } catch (error) {
-            api.error({
-                message: error.response.data.message,
-                description: 'Email của bạn đã được đăng ký!',
-                duration: 2
-            });
+            messageApi.open({
+                type: 'error',
+                content: error.response.data.message
+            })
         }
     }
 
     return (
         <>
+            {contextHolder}
             <div className={styles.jsxRightAuthentication}>
                 <span className={styles.jaxSd}>
                     Đã có tải khoản?{" "}
@@ -114,8 +120,12 @@ export default function Register() {
                                     message: 'Số điện thoại trống!'
                                 },
                                 {
-                                    max: 9,
-                                    message: 'Tối đa 9 ký tự!'
+                                    min: 9,
+                                    message: 'Tối thiểu 9 ký tự!'
+                                },
+                                {
+                                    max: 11,
+                                    message: 'Tối đa 11 ký tự!'
                                 },
                                 () => ({
                                     validator(_, value) {

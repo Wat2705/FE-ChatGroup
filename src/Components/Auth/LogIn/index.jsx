@@ -1,5 +1,5 @@
 import { loginSuccess } from "@/redux/auth";
-import { Button, Form, Input, notification } from "antd";
+import { Button, Form, Input, message } from "antd";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
@@ -7,20 +7,25 @@ import styles from "../auth.module.scss";
 
 export default function LogIn() {
     const dispatch = useDispatch()
-    const [api, contextHolder] = notification.useNotification();
+    const [messageApi, contextHolder] = message.useMessage();
 
     const handleSubmit = async (value) => {
         try {
             let res = await axios.post(`/login`, value)
             dispatch(loginSuccess(res.data))
-            window.location.href = '/'
+            messageApi.open({
+                type: 'success',
+                content: 'Đăng nhập thành công!'
+            })
+            setTimeout(() => {
+                window.location.href = '/'
+            }, 500)
         } catch (error) {
-            api.error({
-                message: error.response.data.message,
-                duration: 2
-            });
+            messageApi.open({
+                type: 'error',
+                content: error.response.data.message
+            })
         }
-
     }
 
     return (
@@ -86,6 +91,5 @@ export default function LogIn() {
                 </div>
             </div>
         </>
-
     )
 }
