@@ -37,35 +37,49 @@ export default function Setting() {
             return false;
         };
 
-        userList.filter(e => {
+        userList?.filter(e => {
             if (e.user._id == jwtDecode(localStorage.getItem('token')).id) {
                 editUser = e.user
-                if (imageUrl == null) {
-                    setImageUrl(`${VITE_BASE_URL}/${e.user.avatarId.path}`)
+                if (imageUrl == null && e.user.avatarId != null) {
+                    setImageUrl(`${VITE_BASE_URL}/${e?.user?.avatarId?.path}`)
                 }
             }
         });
 
         const handleSubmit = () => {
             let formData = new FormData();
+
+            if (document.querySelector('#name').value != '') {
+                axios.post('/updatename', { name: document.querySelector('#name').value }).then(() => {
+                    socket.emit('refreshUser', {
+                        id: jwtDecode(localStorage.getItem('token')).id,
+                        path: imageUrl == undefined ? '' : imageUrl
+                    });
+                })
+            }
+
             if (originFile != null && imageUrl != '') {
                 formData.append('avatar', originFile);
-            }
-            if (document.querySelector('#name').value != '') {
-                formData.append('name', document.querySelector('#name').value);
-            }
-            axios.post('/avatar', formData, {
-                headers: {
-                    "Content-Type": 'multipart/form-data',
-                    Authorization: localStorage.getItem('token')
-                }
-            }).then(() => {
-                setIsEdit(false);
-                socket.emit('refreshUser', {
-                    id: jwtDecode(localStorage.getItem('token')).id,
-                    path: imageUrl == undefined ? '' : imageUrl
-                });
-            })
+                axios.post('/avatar', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(res => {
+                    setIsEdit(false);
+                    socket.emit('refreshUser', {
+                        id: jwtDecode(localStorage.getItem('token')).id,
+                        path: imageUrl == undefined ? '' : imageUrl
+                    });
+                })
+            } else if (originFile == null && imageUrl == '') {
+                axios.post('/avatar', formData).then(() => {
+                    setIsEdit(false);
+                    socket.emit('refreshUser', {
+                        id: jwtDecode(localStorage.getItem('token')).id,
+                        path: imageUrl == undefined ? '' : imageUrl
+                    });
+                })
+            } else setIsEdit(false)
         }
 
         const uploadButton = (
@@ -93,24 +107,38 @@ export default function Setting() {
                     {!edit ? (
                         <div className={styles.oneStep}>
                             <div className={styles.introduce}>
-                                <img
-                                    className={styles.thumbnail}
-                                    src="https://images.pexels.com/photos/3654869/pexels-photo-3654869.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-                                    alt=""
-                                />
-                                <h5>Avatar</h5>
+                                {editUser.avatarId == null ? '' : (
+                                    (editUser?.avatarId?.path == '' ? '' : (
+                                        <>
+                                            <img
+                                                className={styles.thumbnail}
+                                                style={{ objectFit: 'cover' }}
+                                                src={
+                                                    editUser?.avatarId?.path.slice(0, 4) != 'data'
+                                                        ? (editUser?.avatarId?.path.slice(0, 4) != 'http'
+                                                            ? `${VITE_BASE_URL}/${editUser?.avatarId?.path}`
+                                                            : editUser?.avatarId?.path)
+                                                        : editUser?.avatarId?.path
+                                                }
+                                            />
+                                            <h5>Avatar</h5>
+                                        </>
+                                    ))
+                                )}
+
                                 <div className="px-2 py-4">
                                     <h4>User Info</h4>
                                     <p>Name: {editUser.name}</p>
                                     <p>Email: {editUser.email}</p>
                                 </div>
                                 <div className="d-flex justify-content-center gap-4">
-                                    <Button onClick={() => setIsEdit(true)}>Sửa</Button>
+                                    <Button onClick={() => setIsEdit(true)}>Edit</Button>
                                     <Button htmlType="button" onClick={async () => {
                                         await axios.post('/logout', { token: localStorage.getItem('token') })
                                         localStorage.clear()
                                         nav('/login')
-                                    }}>Đăng xuất</Button>
+                                        window.location.reload()
+                                    }}>Log Out</Button>
                                 </div>
                             </div>
                         </div>
@@ -129,7 +157,8 @@ export default function Setting() {
                                             src={imageUrl}
                                             alt="avatar"
                                             style={{
-                                                width: '100%',
+                                                width: '100px',
+                                                height: '100px'
                                             }}
                                         />
                                     ) : (

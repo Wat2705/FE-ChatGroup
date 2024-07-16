@@ -1,5 +1,5 @@
 import { socket } from "@/config/socket";
-import { getUserList, receivedMessage } from "@/redux/chat";
+import { getUserList, receivedMessage, getOnline } from "@/redux/chat";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Col, Row } from "reactstrap";
@@ -8,6 +8,12 @@ import Header from "./Header";
 import Setting from "./Setting";
 import SideBar from "./SideBar";
 import styles from './chat.module.scss';
+import axios from "axios";
+
+axios.interceptors.request.use(config => {
+    config.headers.Authorization = `${localStorage.getItem("token")}`;
+    return config
+})
 
 function Chat() {
     const dispatch = useDispatch()
@@ -16,7 +22,8 @@ function Chat() {
         function onConnect() { }
 
         function onGetUserList(data) {
-            dispatch(getUserList(data))
+            dispatch(getUserList(data.userList))
+            dispatch(getOnline(data.length))
         }
 
         function onReceive(data) {

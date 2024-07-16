@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     allMessage: [],
-    userList: []
+    userList: [],
+    online: 0
 };
 
 export const chatSlice = createSlice({
@@ -33,12 +34,15 @@ export const chatSlice = createSlice({
         getUserList: (state, action) => {
             state.userList = action.payload
         },
+        getOnline: (state, action) => {
+            state.online = action.payload
+        },
         storeMessage: (state, action) => {
             state.allMessage = action.payload
         }
     },
 });
 
-export const { sendingMessage, receivedMessage, getUserList, storeMessage } = chatSlice.actions;
+export const { sendingMessage, receivedMessage, getUserList, storeMessage, getOnline } = chatSlice.actions;
 
 export default chatSlice.reducer;
