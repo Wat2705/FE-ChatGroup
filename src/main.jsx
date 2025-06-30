@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
-import './config/axios.js';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { store, persistor } from './redux/store'; // Import store và persistor
+import { store, persistor } from './redux/store';
 import { message } from 'antd';
 
 message.config({
