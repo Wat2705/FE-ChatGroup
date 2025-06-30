@@ -2,12 +2,14 @@ import { socket } from "@/config/socket";
 import { toggleSetting } from "@/redux/toggle";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Drawer, Flex, Upload } from "antd";
-import axios from "axios";
+import axiosInstance from "@/config/axios";
+import { logout } from '@/redux/auth';
 import { jwtDecode } from "jwt-decode";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styles from "./setting.module.scss";
+
 const { VITE_BASE_URL } = import.meta.env
 
 const getBase64 = (img, callback) => {
@@ -50,7 +52,7 @@ export default function Setting() {
             let formData = new FormData();
 
             if (document.querySelector('#name').value != '') {
-                axios.post('/updatename', { name: document.querySelector('#name').value }).then(() => {
+                axiosInstance.post('/updatename', { name: document.querySelector('#name').value }).then(() => {
                     socket.emit('refreshUser', {
                         id: jwtDecode(localStorage.getItem('token')).id,
                         path: imageUrl == undefined ? '' : imageUrl
@@ -60,7 +62,7 @@ export default function Setting() {
 
             if (originFile != null && imageUrl != '') {
                 formData.append('avatar', originFile);
-                axios.post('/avatar', formData, {
+                axiosInstance.post('/avatar', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -72,7 +74,7 @@ export default function Setting() {
                     });
                 })
             } else if (originFile == null && imageUrl == '') {
-                axios.post('/avatar', formData).then(() => {
+                axiosInstance.post('/avatar', formData).then(() => {
                     setIsEdit(false);
                     socket.emit('refreshUser', {
                         id: jwtDecode(localStorage.getItem('token')).id,
@@ -81,6 +83,17 @@ export default function Setting() {
                 })
             } else setIsEdit(false)
         }
+
+        const handleLogout = async () => {
+            try {
+                await axiosInstance.post('/logout', { token: localStorage.getItem('token') });
+                dispatch(logout()); // Gọi action logout, bao gồm purge
+                navigate('/login');
+                window.location.reload(); // Reload để đảm bảo state mới
+            } catch (err) {
+                console.error('Logout error:', err);
+            }
+        };
 
         const uploadButton = (
             <button
@@ -133,12 +146,7 @@ export default function Setting() {
                                 </div>
                                 <div className="d-flex justify-content-center gap-4">
                                     <Button onClick={() => setIsEdit(true)}>Edit</Button>
-                                    <Button htmlType="button" onClick={async () => {
-                                        await axios.post('/logout', { token: localStorage.getItem('token') })
-                                        localStorage.clear()
-                                        nav('/login')
-                                        window.location.reload()
-                                    }}>Log Out</Button>
+                                    <Button htmlType="button" onClick={handleLogout}>Log Out</Button>
                                 </div>
                             </div>
                         </div>

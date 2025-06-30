@@ -6,6 +6,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "../chatbox.module.scss";
 import { message } from "antd";
+import axiosInstance from "@/config/axios";
 const { VITE_BASE_URL } = import.meta.env
 
 export default function ChatInput() {
@@ -29,17 +30,12 @@ export default function ChatInput() {
                     path: info.file.response.path,
                     id: userId
                 })
-                axios({
-                    url: `/message/send`,
-                    method: 'POST',
-                    headers: {
-                        Authorization: localStorage.getItem('token')
-                    },
-                    data: {
+                axiosInstance.post(`/message/send`,
+                    {
                         imageId: info.file.response._id,
                         senderId: userId
                     }
-                }).then(res => { })
+                ).then(() => { })
             }
         }
     }
@@ -47,17 +43,12 @@ export default function ChatInput() {
     const handleSubmit = async (data) => {
         if (data.msg != '' && data.msg != undefined) {
             try {
-                await axios({
-                    url: `/message/send`,
-                    method: 'POST',
-                    headers: {
-                        Authorization: localStorage.getItem('token')
-                    },
-                    data: {
+                await axiosInstance.post(`/message/send`,
+                    {
                         content: data.msg,
                         senderId: userId
                     }
-                })
+                )
                 dispatch(sendingMessage({
                     content: data.msg,
                     id: userId,

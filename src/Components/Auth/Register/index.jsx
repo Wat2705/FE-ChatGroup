@@ -1,7 +1,7 @@
 import { Button, Form, Input, message } from "antd";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../auth.module.scss";
+import axiosInstance from "@/config/axios";
 
 export default function Register() {
     const nav = useNavigate()
@@ -10,7 +10,7 @@ export default function Register() {
     const handleSubmit = async (value) => {
         let { rePassword, ...rest } = value
         try {
-            await axios.post('/register', rest)
+            await axiosInstance.post('/register', rest)
             messageApi.open({
                 type: 'success',
                 content: 'Đăng ký thành công!'
