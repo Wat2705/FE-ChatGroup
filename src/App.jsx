@@ -1,18 +1,35 @@
-import { Provider } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { logout } from './redux/auth';
+import axios from 'axios';
 import { RouterProvider } from 'react-router-dom';
-import { PersistGate } from 'redux-persist/integration/react';
 import './global.scss';
-import { persistor, store } from './redux/store';
 import { router } from './routers';
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    console.log('Token from localStorage:', token);
+    if (token) {
+      axios
+        .get('/verify-token', {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(() => { })
+        // .catch((err) => {
+        //   if (err.response && err.response.status === 401) {
+        //     dispatch(logout()); // Sử dụng action logout
+        //     window.location.href = '/login';
+        //   }
+        // });
+    }
+  }, [dispatch]);
+
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <RouterProvider router={router} />
-      </PersistGate>
-    </Provider>
-  )
+    <RouterProvider future={{v7_startTransition: true}} router={router} />
+  );
 }
 
-export default App
+export default App;
